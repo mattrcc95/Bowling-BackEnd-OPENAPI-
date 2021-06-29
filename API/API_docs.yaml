@@ -1,0 +1,320 @@
+openapi: 3.0.0 
+info:
+  title: 10 pins bowling APIs
+  contact:
+    email: matteo.ricci@cgm.com
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080/api/v1"
+    description: TEST SERVER 
+paths:
+  /scoreboard:
+    get:
+      summary: Fetch the scoreboard
+      responses:
+        "200":
+          description: scoreboard  correctly fetched
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Scoreboard"
+    delete:
+      summary: Delete the scoreboard
+      responses:
+        "204":
+          description: scoreboard correctly deleted
+  /scoreboard/frames/:
+    post:
+      summary: Create (manually) a frame
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+             $ref: "#/components/schemas/NoLinkFrame"
+      responses:
+        "201":
+          description: frame correctly created
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/NoLinkFrame"
+        "403":
+          description: attempt to create an invalid frame
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: ID already exists or unknown resource type
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /scoreboard/frames/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: frame id-th (integer value) OR "last"
+      summary: Fetch the id-th or 'last' frame
+      responses:
+        "200":
+          description: frame correctly fetched
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/LinkFrame"
+        "404":
+          description: frame requested does not exists
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      summary: Update the id-th == 'last' frame
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: frame id-th (id is an integer value that MUST refer to the last frame)
+      responses:
+        "204":
+          description: frame correctly updated
+        "400":
+          description: frame to update is not last or does not exists
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: cannot update ID, it's resource identifier
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete the last frame
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: frame id-th (id is an integer value that MUST refer to the last frame)
+      responses:
+        "204":
+          description: frame correctly deleted
+        "400":
+          description: frame to delete is not last or does not exists
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /scoreboard/rolls:
+    post:
+      summary: Acquire the current roll value
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+             $ref: "#/components/schemas/Roll"
+      responses:
+        "201":
+          description: roll acceptable
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Roll"
+        "403":
+          description: roll inserted does not fullfill the requirements or game has ended
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    NoLinkFrame:
+      description: scoreboard item
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          properties:
+            id: 
+              type: integer
+            type:
+              type: string
+            attributes:
+              type: object
+              properties:
+                shot1:
+                  type: integer
+                shot2:
+                  type: integer
+                shot3:
+                  type: integer
+                flag:
+                  type: string
+                localscore:
+                  type: integer
+      example:
+        data:
+          id: 1
+          type: "Frame"
+          attributes:
+            shot1: 2
+            shot2: 5
+            shot3: null
+            flag: "2 - 5"
+            localscore: 7
+    LinkFrame:
+      description: Frame with Link included
+      type: object
+      required:
+        - data
+      properties:
+        links: 
+          type: object
+          properties:
+            self:
+              type: string
+        data:
+          type: object
+          properties:
+            id: 
+              type: integer
+            type:
+              type: string
+            attributes:
+              type: object
+              properties:
+                shot1:
+                  type: integer
+                shot2:
+                  type: integer
+                shot3:
+                  type: integer
+                flag:
+                  type: string
+                score:
+                  type: integer
+      example:
+        links:
+          self: "http://localhost:8080/api/player/game/rolls/1"
+        data:
+          id: 1
+          type: "Frame"
+          attributes:
+            shot1: 2
+            shot2: 5
+            shot3: null
+            flag: "2 - 5"
+            score: 7
+    Scoreboard:
+      description: real-time scoreboard, formed by noLinkFrame items
+      type: object
+      required:
+        - data
+      properties:
+        links: 
+          type: object
+          properties:
+            self:
+              type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/NoLinkFrame"
+      example: 
+          links:
+            self: "http://localhost:8080/api/player/game/rolls"
+          data:
+           -  id: 1
+              type: "Frame"
+              attributes:
+                shot1: 3
+                shot2: 7
+                shot3: null
+                flag: "3 - /"
+                localscore: 20
+           -  id: 2
+              type: "Frame"
+              attributes:
+                shot1: 10
+                shot2: null
+                shot3: null
+                flag: "X"
+                localscore: 36
+           -  id: 3
+              type: "Frame"
+              attributes:
+                shot1: 2
+                shot2: 4
+                soht3: 
+                flag: "2 - 4"
+                localscore: 42
+    Error:
+      description: error response model
+      type: object
+      required: 
+        - data
+      properties:
+        data:
+          type: object
+          properties:
+            attributes:
+              type: object
+              properties:
+                code:
+                  type: string
+                description:
+                  type: string
+              example:
+                code: "xxx"
+                description: "string"
+    Roll:
+      description: value of the executed roll
+      type: object
+      required: 
+        - data
+      properties:
+        data:
+          type: object
+          properties:
+            attributes:
+              type: object
+              properties:
+                value: 
+                  type: integer
+          example:
+            attributes:
+              value: 4
+
+        
+        
+      
+              
+         
+        
+
+
+            
+                      
+                    
+                    
+                    
+                
+            
+        
+        
+  
+        
+        
+  
