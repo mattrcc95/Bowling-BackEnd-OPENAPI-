@@ -86,6 +86,5 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
         attributes.flag = frame.flag
     }
 
-
 }
 
