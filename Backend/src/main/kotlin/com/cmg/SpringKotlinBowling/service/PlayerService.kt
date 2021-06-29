@@ -1,9 +1,6 @@
 package com.cmg.SpringKotlinBowling.service
 
-import com.cmg.SpringKotlinBowling.JsonApiModels.AttributesFrame
-import com.cmg.SpringKotlinBowling.JsonApiModels.DataFrame
-import com.cmg.SpringKotlinBowling.JsonApiModels.FrameJson
-import com.cmg.SpringKotlinBowling.JsonApiModels.Roll
+import com.cmg.SpringKotlinBowling.JsonApiModels.*
 import com.cmg.SpringKotlinBowling.persistenceModels.FramePostgre
 import com.cmg.SpringKotlinBowling.springDataModels.Frame
 import com.cmg.SpringKotlinBowling.repository.PlayerRepository
@@ -16,11 +13,12 @@ import org.springframework.stereotype.Service
 import kotlin.collections.ArrayList
 
 @Service
-class PlayerService(private val playerRepository: PlayerRepository) {
+class PlayerService(private val playerRepository: PlayerRepository, private val gameApi: Game_Api) {
     var game = arrayListOf<Frame>()
 
     fun getScoreBoard(): ArrayList<FramePostgre> = this.playerRepository.findAll() as ArrayList<FramePostgre>
     fun uploadFrame(framePostgre: FramePostgre): FramePostgre = this.playerRepository.save(framePostgre)
+
     fun deleteAll() {
         game = arrayListOf()
         this.playerRepository.deleteAll()
@@ -30,7 +28,7 @@ class PlayerService(private val playerRepository: PlayerRepository) {
     fun getFrameByID(id: Int): FramePostgre? = this.playerRepository.findByIdOrNull(id)
     fun deleteFrameByID(id:Int) {
         this.playerRepository.deleteById(id)
-        val removed = game.removeAt(game.lastIndex)
+        game.removeAt(game.lastIndex)
     }
 
     fun playRoll(roll: Roll) : ResponseEntity<Any> {
@@ -56,25 +54,26 @@ class PlayerService(private val playerRepository: PlayerRepository) {
     }
 
     private fun getRollResponse(roll: Roll, currentFrame: Frame, isToAdd: Boolean) : ResponseEntity<Any>{
-        return if(rollIsValid(roll, currentFrame)) {
+        return if(this.gameApi.rollIsValid(roll, currentFrame)) {
             if(isToAdd) game.add(currentFrame)
-            val scoreBoard = play(game)
+            val scoreBoard = this.gameApi.play(game)
             scoreBoard.forEach { framePostgre -> uploadFrame(framePostgre) }
             positiveRollResponse(roll)
         } else negativeRollResponse(roll.data.attributes.value)
     }
 
-     fun <T: Any> toJsonApi(frame: FramePostgre?, frameType: T) {
-        if(frame != null) {
+     fun <T: Any> toJsonApi(framePostgre: FramePostgre?, frameType: T) {
+        if(framePostgre != null) {
             val type = frameType::class.java.simpleName
-            if (type == "DataFrame") { //multi frame response (ie scoreboard item)
+            if (type == "DataFrame") { //from framePostgre to NoLinkFrame
                 val dataFrame = frameType as DataFrame
-                dataFrame.id = frame.id.toString()
-                setAttributes(frame, dataFrame.attributes)
-            } else { //single frame response
+                dataFrame.id = framePostgre.id.toString()
+                setAttributes(framePostgre, dataFrame.attributes)
+            } else
+            {
                 val frameJson = frameType as FrameJson
-                frameJson.data.id = frame.id.toString()
-                setAttributes(frame, frameJson.data.attributes)
+                frameJson.data.id = framePostgre.id.toString()
+                setAttributes(framePostgre, frameJson.data.attributes)
             }
         }
     }
@@ -86,6 +85,7 @@ class PlayerService(private val playerRepository: PlayerRepository) {
         attributes.localScore = frame.score
         attributes.flag = frame.flag
     }
+
 
 }
 

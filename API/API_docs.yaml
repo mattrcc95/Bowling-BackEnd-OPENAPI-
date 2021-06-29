@@ -8,29 +8,28 @@ servers:
   - url: "http://localhost:8080/api/v1"
     description: TEST SERVER 
 paths:
-  /scoreboard:
+  /scoreboard/frames/:
     get:
-      summary: Fetch the scoreboard
+      summary: Fetch all the frames
       responses:
         "200":
-          description: scoreboard  correctly fetched
+          description: frames correctly fetched
           content: 
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Scoreboard"
     delete:
-      summary: Delete the scoreboard
+      summary: Delete all the frames
       responses:
         "204":
-          description: scoreboard correctly deleted
-  /scoreboard/frames/:
+          description: frames correctly deleted
     post:
-      summary: Create (manually) a frame
+      summary: Create (manually) a frame with id_created == id_last + 1
       requestBody:
         content:
           application/vnd.api+json:
             schema:
-             $ref: "#/components/schemas/NoLinkFrame"
+             $ref: "#/components/schemas/NoLinkNoIDFrame"
       responses:
         "201":
           description: frame correctly created
@@ -38,18 +37,6 @@ paths:
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/NoLinkFrame"
-        "403":
-          description: attempt to create an invalid frame
-          content: 
-            application/vnd.api+json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "409":
-          description: ID already exists or unknown resource type
-          content: 
-            application/vnd.api+json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /scoreboard/frames/{id}:
     get:
       parameters:
@@ -81,41 +68,47 @@ paths:
           required: true
           schema:
             type: string
-          description: frame id-th (id is an integer value that MUST refer to the last frame)
+          description: id is an integer value that MUST be equale to the ID ofthe last frame
       responses:
         "204":
           description: frame correctly updated
         "400":
-          description: frame to update is not last or does not exists
+          description: frame to update is not last or attempt to modify the ID is made
           content: 
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Error"
-        "403":
-          description: cannot update ID, it's resource identifier
+        "404":
+          description: frame to update not found
           content: 
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Error"
     delete:
-      summary: Delete the last frame
+      summary: Delete the id-th == 'last' frame
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
-          description: frame id-th (id is an integer value that MUST refer to the last frame)
+          description: id is an integer value that MUST be equale to the ID ofthe last frame
       responses:
         "204":
           description: frame correctly deleted
         "400":
-          description: frame to delete is not last or does not exists
+          description: frame to delete is not last 
           content: 
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /scoreboard/rolls:
+        "404":
+          description: frame to delete does not exist
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /scoreboard/frames/rolls:
     post:
       summary: Acquire the current roll value
       requestBody:
@@ -130,7 +123,7 @@ paths:
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Roll"
-        "403":
+        "400":
           description: roll inserted does not fullfill the requirements or game has ended
           content: 
             application/vnd.api+json:
@@ -138,6 +131,39 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
+    NoLinkNoIDFrame:
+      description: no ID frame
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+            attributes:
+              type: object
+              properties:
+                shot1:
+                  type: integer
+                shot2:
+                  type: integer
+                shot3:
+                  type: integer
+                flag:
+                  type: string
+                localscore:
+                  type: integer
+      example:
+        data:
+          type: "Frame"
+          attributes:
+            shot1: 2
+            shot2: 5
+            shot3: null
+            flag: "2 - 5"
+            localscore: 7
     NoLinkFrame:
       description: scoreboard item
       type: object
@@ -207,7 +233,7 @@ components:
                   type: integer
       example:
         links:
-          self: "http://localhost:8080/api/player/game/rolls/1"
+          self: "http://localhost:8080/api/v1/scoreboard/frames/1"
         data:
           id: 1
           type: "Frame"
@@ -234,7 +260,7 @@ components:
             $ref: "#/components/schemas/NoLinkFrame"
       example: 
           links:
-            self: "http://localhost:8080/api/player/game/rolls"
+            self: "http://localhost:8080/api/v1/scoreboard/frames"
           data:
            -  id: 1
               type: "Frame"
@@ -296,25 +322,3 @@ components:
           example:
             attributes:
               value: 4
-
-        
-        
-      
-              
-         
-        
-
-
-            
-                      
-                    
-                    
-                    
-                
-            
-        
-        
-  
-        
-        
-  

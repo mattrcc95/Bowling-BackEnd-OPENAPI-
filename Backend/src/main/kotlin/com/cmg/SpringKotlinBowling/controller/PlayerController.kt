@@ -1,8 +1,6 @@
 package com.cmg.SpringKotlinBowling.controller
-import com.cmg.SpringKotlinBowling.JsonApiModels.DataFrame
-import com.cmg.SpringKotlinBowling.JsonApiModels.FrameJson
-import com.cmg.SpringKotlinBowling.JsonApiModels.Roll
-import com.cmg.SpringKotlinBowling.JsonApiModels.Scoreboard
+import com.cmg.SpringKotlinBowling.JsonApiModels.*
+import com.cmg.SpringKotlinBowling.persistenceModels.FramePostgre
 import com.cmg.SpringKotlinBowling.serverReponses.*
 import com.cmg.SpringKotlinBowling.service.PlayerService
 import org.springframework.http.ResponseEntity
@@ -42,7 +40,7 @@ class PlayerController(private val playerService: PlayerService){
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.GET], produces = ["application/vnd.api+json"] )
     fun getFrame(@PathVariable id: String) : ResponseEntity<Any> {
         val lastID = this.playerService.getLastId()
-        return if ((id == "last" && lastID != 0) || (id.toInt() in 1..lastID)) {
+        return if ((id == "last" && lastID != 0) || (id.toInt() in 1 until lastID)) {
             val frameJson = FrameJson()
             frameJson.links?.self = "$baseLink/scoreboard/frames/$id"
             if(id == "last"){
@@ -71,6 +69,15 @@ class PlayerController(private val playerService: PlayerService){
             negativeFrameDeletionResponseNOTFOUND(id)
         }
     }
+
+//    @RequestMapping("/scoreboard/frames/", method = [RequestMethod.POST], produces = ["application/vnd.api+json"] )
+//    fun createLastFrame(@RequestBody frame: NoIdFrameJson) : ResponseEntity<Any> {
+//        val framePostgre = this.playerService.getFramePostgre_Given_NoIdFrameJson(frame)
+//        this.playerService.uploadFrame(framePostgre)
+//        val frameJson = FrameJson()
+//        this.playerService.toJsonApi(framePostgre, frameJson)
+//        return positiveFrameCreationResponse(frameJson)
+//    }
 
 //    COMPLETE BELOW..
 //    @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.PATCH], produces = ["application/vnd.api+json"] )

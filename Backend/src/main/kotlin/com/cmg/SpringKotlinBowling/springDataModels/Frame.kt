@@ -7,5 +7,4 @@ data class Frame (
     var localScore: Int,
     var bonusShots: Int,
     var isExpired: Boolean,
-    var isUpdated: Boolean){
-}
+    var isUpdated: Boolean)
