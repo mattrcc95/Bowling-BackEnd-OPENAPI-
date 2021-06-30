@@ -1,0 +1,113 @@
+package com.cgm.spring_kotlin_bowling.service
+
+import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
+import com.cgm.spring_kotlin_bowling.spring_data_models.Frame
+import com.cgm.spring_kotlin_bowling.repository.PlayerRepository
+import com.cgm.spring_kotlin_bowling.server_reponses.gameEndsReponse
+import com.cgm.spring_kotlin_bowling.server_reponses.negativeRollResponse
+import com.cgm.spring_kotlin_bowling.server_reponses.positiveRollResponse
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
+import kotlin.collections.ArrayList
+
+@Service
+class PlayerService(private val playerRepository: PlayerRepository, private val gameApi: Game_Api) {
+    var game = arrayListOf<Frame>()
+
+    fun getScoreBoard(): ArrayList<FramePostgre> = this.playerRepository.findAll() as ArrayList<FramePostgre>
+    fun uploadFrame(framePostgre: FramePostgre): FramePostgre = this.playerRepository.save(framePostgre)
+
+    fun deleteAll() {
+        game = arrayListOf()
+        this.playerRepository.deleteAll()
+    }
+    fun getLastFrame(): FramePostgre = this.playerRepository.getLastFrame()
+    fun getLastId(): Int = this.playerRepository.getLastId()
+    fun getFrameByID(id: Int): FramePostgre? = this.playerRepository.findByIdOrNull(id)
+
+//    fun deleteFrameByID(id:Int){
+//        this.playerRepository.deleteById(id)
+//        val last = game.removeAt(game.lastIndex)
+//        val lastScore = last.frameShots.fold(0) { sum, shot -> sum + shot }
+//        val lastLength = last.frameShots.size
+//
+//        if (game.size > 0) {
+//            val secondLast = game[game.lastIndex]
+//            secondLast.localScore -= lastScore
+//            secondLast.bonusShots += getBonusBack(lastLength, secondLast)
+//            if (game.size > 1) {
+//                val thirdLast = game[game.lastIndex - 1]
+//            }
+//        }
+//
+//    }
+//
+//    //only for id < 10 up to now
+//    fun getBonusBack (lastLength: Int, frame: Frame) : Int {
+//        if(frame.flag.contains("X")) {
+//            return if (lastLength == 2) 2 else 1
+//        } else if(frame.flag.contains("/")){
+//            return 1
+//        } else {
+//            return 0
+//        }
+//    }
+
+    fun playRoll(roll: com.cgm.spring_kotlin_bowling.jsonApiModels.Roll) : ResponseEntity<Any> {
+        val currentRollValue = roll.data.attributes.value
+        val currentFrame = Frame(0, currentRollValue, arrayListOf(), 0, 0, "", false, false)
+        if(game.isEmpty()){
+            currentFrame.id = 1
+            return getRollResponse(roll, currentFrame, true)
+        } else{
+            val lastFrame = game[game.lastIndex]
+            val rollIsPlayable = lastFrame.id < 10 || (lastFrame.id == 10 && !lastFrame.isExpired)
+            return if(rollIsPlayable) {
+                if (lastFrame.isExpired) {
+                    currentFrame.id = lastFrame.id + 1
+                    getRollResponse(roll, currentFrame, true)
+                }
+                else {
+                    lastFrame.currentShot = currentRollValue
+                    getRollResponse(roll, lastFrame, false)
+                }
+            } else gameEndsReponse()
+        }
+    }
+
+    private fun getRollResponse(roll: com.cgm.spring_kotlin_bowling.jsonApiModels.Roll, currentFrame: Frame, isToAdd: Boolean) : ResponseEntity<Any>{
+        return if(this.gameApi.rollIsValid(roll, currentFrame)) {
+            if(isToAdd) game.add(currentFrame)
+            val scoreBoard = this.gameApi.play(game)
+            scoreBoard.forEach { framePostgre -> uploadFrame(framePostgre) }
+            positiveRollResponse(roll)
+        } else negativeRollResponse(roll.data.attributes.value)
+    }
+
+     fun <T: Any> toJsonApi(framePostgre: FramePostgre?, frameType: T) {
+        if(framePostgre != null) {
+            val type = frameType::class.java.simpleName
+            if (type == "DataFrame") { //from framePostgre to NoLinkFrame
+                val dataFrame = frameType as com.cgm.spring_kotlin_bowling.jsonApiModels.DataFrame
+                dataFrame.id = framePostgre.id.toString()
+                setAttributes(framePostgre, dataFrame.attributes)
+            } else
+            {
+                val frameJson = frameType as com.cgm.spring_kotlin_bowling.jsonApiModels.FrameJson
+                frameJson.data.id = framePostgre.id.toString()
+                setAttributes(framePostgre, frameJson.data.attributes)
+            }
+        }
+    }
+
+    private fun setAttributes (frame: FramePostgre, attributes: com.cgm.spring_kotlin_bowling.jsonApiModels.AttributesFrame){
+        attributes.shot1 = frame.shot1
+        attributes.shot2 = frame.shot2
+        attributes.shot3 = frame.shot3
+        attributes.localScore = frame.score
+        attributes.flag = frame.flag
+    }
+
+}
+
