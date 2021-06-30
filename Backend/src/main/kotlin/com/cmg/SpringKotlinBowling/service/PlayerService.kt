@@ -26,14 +26,38 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
     fun getLastFrame(): FramePostgre = this.playerRepository.getLastFrame()
     fun getLastId(): Int = this.playerRepository.getLastId()
     fun getFrameByID(id: Int): FramePostgre? = this.playerRepository.findByIdOrNull(id)
-    fun deleteFrameByID(id:Int) {
-        this.playerRepository.deleteById(id)
-        game.removeAt(game.lastIndex)
-    }
+
+//    fun deleteFrameByID(id:Int){
+//        this.playerRepository.deleteById(id)
+//        val last = game.removeAt(game.lastIndex)
+//        val lastScore = last.frameShots.fold(0) { sum, shot -> sum + shot }
+//        val lastLength = last.frameShots.size
+//
+//        if (game.size > 0) {
+//            val secondLast = game[game.lastIndex]
+//            secondLast.localScore -= lastScore
+//            secondLast.bonusShots += getBonusBack(lastLength, secondLast)
+//            if (game.size > 1) {
+//                val thirdLast = game[game.lastIndex - 1]
+//            }
+//        }
+//
+//    }
+//
+//    //only for id < 10 up to now
+//    fun getBonusBack (lastLength: Int, frame: Frame) : Int {
+//        if(frame.flag.contains("X")) {
+//            return if (lastLength == 2) 2 else 1
+//        } else if(frame.flag.contains("/")){
+//            return 1
+//        } else {
+//            return 0
+//        }
+//    }
 
     fun playRoll(roll: Roll) : ResponseEntity<Any> {
         val currentRollValue = roll.data.attributes.value
-        val currentFrame = Frame(0, currentRollValue, arrayListOf(), 0, 0, false, false)
+        val currentFrame = Frame(0, currentRollValue, arrayListOf(), 0, 0, "", false, false)
         if(game.isEmpty()){
             currentFrame.id = 1
             return getRollResponse(roll, currentFrame, true)

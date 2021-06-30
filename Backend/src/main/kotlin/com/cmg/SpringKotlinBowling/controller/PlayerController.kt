@@ -57,33 +57,31 @@ class PlayerController(private val playerService: PlayerService){
     }
 
     //NEW APIs:
+    //DELETE LAST FRAME
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.DELETE], produces = ["application/vnd.api+json"] )
     fun deleteLastFrame(@PathVariable id: String) : ResponseEntity<Any> {
-        val lastID = this.playerService.getLastId()
-        return if ((id == "last" && lastID != 0) || (id.toInt()  == lastID)) {
-            this.playerService.deleteFrameByID(lastID)
-            positiveFrameDeletionResponse()
-        } else if (id.toInt() in 0 until lastID){
-            negativeFrameDeletionResponseNOTLAST(id)
-        } else {
-            negativeFrameDeletionResponseNOTFOUND(id)
-        }
+//        val lastID = this.playerService.getLastId()
+//        return if ((id == "last" && lastID != 0) || (id.toInt()  == lastID)) {
+//            this.playerService.deleteFrameByID(lastID)
+//            positiveFrameDeletionResponse()
+//        } else if (id.toInt() in 0 until lastID){
+//            negativeFrameDeletionResponseNOTLAST(id)
+//        } else {
+//            negativeFrameDeletionResponseNOTFOUND(id)
+//        }
+        return APInotImplementedResponse()
     }
 
-//    @RequestMapping("/scoreboard/frames/", method = [RequestMethod.POST], produces = ["application/vnd.api+json"] )
-//    fun createLastFrame(@RequestBody frame: NoIdFrameJson) : ResponseEntity<Any> {
-//        val framePostgre = this.playerService.getFramePostgre_Given_NoIdFrameJson(frame)
-//        this.playerService.uploadFrame(framePostgre)
-//        val frameJson = FrameJson()
-//        this.playerService.toJsonApi(framePostgre, frameJson)
-//        return positiveFrameCreationResponse(frameJson)
-//    }
+    //NOT IMPLEMENTED APIs:
+    @RequestMapping("/scoreboard/frames/", method = [RequestMethod.POST], produces = ["application/vnd.api+json"] )
+    fun createLastFrame(@RequestBody frame: NoIdFrameJson) : ResponseEntity<Any> {
+        return APInotImplementedResponse()
+    }
 
-//    COMPLETE BELOW..
-//    @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.PATCH], produces = ["application/vnd.api+json"] )
-//    fun updateLastFrame(@PathVariable id: String) : ResponseEntity<Any> {
-//
-//    }
+    @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.PATCH], produces = ["application/vnd.api+json"] )
+    fun updateLastFrame(@PathVariable id: String) : ResponseEntity<Any> {
+        return APInotImplementedResponse()
+    }
 
 }
 

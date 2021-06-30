@@ -78,6 +78,15 @@ fun negativeFrameDeletionResponseNOTFOUND(id: String) : ResponseEntity<Any> {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(httpHeaders).body(errorTemplate)
 }
 
+fun APInotImplementedResponse() : ResponseEntity<Any> {
+    val httpHeaders = HttpHeaders()
+    httpHeaders.add("description", " API not implemented")
+    val errorTemplate = ErrorTemplate()
+    errorTemplate.data.attributes.code = "500"
+    errorTemplate.data.attributes.description = "500 API NOT IMPLEMENTED"
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(httpHeaders).body(errorTemplate)
+}
+
 //fun positiveFrameCreationResponse(frameJson: FrameJson) : ResponseEntity<Any> {
 //    val httpHeaders = HttpHeaders()
 //    httpHeaders.add("description", "201 CREATED: roll correctly acquired")

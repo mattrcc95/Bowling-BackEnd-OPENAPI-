@@ -6,5 +6,6 @@ data class Frame (
     var frameShots: ArrayList<Int>,
     var localScore: Int,
     var bonusShots: Int,
+    var flag: String,
     var isExpired: Boolean,
     var isUpdated: Boolean)
