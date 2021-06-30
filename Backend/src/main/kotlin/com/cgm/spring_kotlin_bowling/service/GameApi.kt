@@ -80,9 +80,8 @@ class GameApi {
         }
     }
 
-    fun rollIsValid(roll: Roll, currentFrame: Frame): Boolean {
-        val rollValue = roll.data.attributes.value
-        return rollValue in 0 until getThreshold(currentFrame)
+    fun rollIsValid(rollValue: Int, currentFrame: Frame): Boolean {
+        return rollValue in 0..getThreshold(currentFrame)
     }
 
     private fun getThreshold(currentFrame: Frame): Int {

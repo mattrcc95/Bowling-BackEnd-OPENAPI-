@@ -262,6 +262,7 @@ components:
       properties:
         data:
           type: object
+          nullable: false
           properties:
             attributes:
               type: object

@@ -35,7 +35,8 @@ class PlayerController(private val playerService: PlayerService) {
 
     @RequestMapping("/scoreboard/frames/rolls", method = [RequestMethod.POST], produces = [MIME_JSONAPI])
     fun getRoll(@RequestBody roll: Roll): ResponseEntity<Any> {
-        return this.playerService.playRoll(roll)
+        val rollValue = roll.data.attributes.value
+        return this.playerService.playRoll(rollValue)
     }
 
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.GET], produces = [MIME_JSONAPI])
@@ -58,19 +59,9 @@ class PlayerController(private val playerService: PlayerService) {
     }
 
 
-    //NEW APIs:
-    //DELETE LAST FRAME
+
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.DELETE], produces = [MIME_JSONAPI])
     fun deleteLastFrame(@PathVariable id: String): ResponseEntity<Any> {
-//        val lastID = this.playerService.getLastId()
-//        return if ((id == "last" && lastID != 0) || (id.toInt()  == lastID)) {
-//            this.playerService.deleteFrameByID(lastID)
-//            positiveFrameDeletionResponse()
-//        } else if (id.toInt() in 0 until lastID){
-//            negativeFrameDeletionResponseNOTLAST(id)
-//        } else {
-//            negativeFrameDeletionResponseNOTFOUND(id)
-//        }
         return apiNotImplementedResponse()
     }
 

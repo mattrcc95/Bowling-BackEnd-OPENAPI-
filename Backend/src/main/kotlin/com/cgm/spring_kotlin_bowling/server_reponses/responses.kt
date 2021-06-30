@@ -45,43 +45,33 @@ private fun buildResponse(
     return ResponseEntity.status(status).headers(httpHeaders).body(errorTemplate)
 }
 
-fun positiveRollResponse(roll: Roll): ResponseEntity<Any> {
+fun positiveRollResponse(rollValue: Int): ResponseEntity<Any> {
+    val roll = getRoll(rollValue)
+    roll.data.attributes.value = rollValue
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", "201 CREATED: roll correctly acquired")
     return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(roll)
 }
 
-fun negativeRollResponse(rollValue: Int): ResponseEntity<Any> =
-    buildResponse400("400 BAD REQUEST: roll with value $rollValue is not acceptable")
+fun negativeRollResponse(): ResponseEntity<Any> =
+    buildResponse400("400 BAD REQUEST: roll not acceptable")
 
 fun gameEndsReponse(): ResponseEntity<Any> =
     buildResponse400("400 BAD REQUEST: game has ended")
 
-//fun negativeFrameDeletionResponseNOTLAST(id: String)=
-//    buildResponse400( "400 BAD REQUEST: frame with ID $id is not the last one")
-//
-//fun positiveFrameDeletionResponse(): ResponseEntity<Any> {
-//    val httpHeaders = HttpHeaders()
-//    httpHeaders.add("description", "204 NO CONTENT: last frame correctly deleted")
-//    return ResponseEntity.noContent().build()
-//}
-//
-//fun negativeFrameDeletionResponseNOTFOUND(id: String): ResponseEntity<Any> {
-//    val httpHeaders = HttpHeaders()
-//    val errorTemplate = ErrorTemplate()
-//    errorTemplate.data.attributes.code = "404"
-//    errorTemplate.data.attributes.description = "404 NOT FOUND: frame with ID $id not found"
-//    return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(httpHeaders).body(errorTemplate)
-//}
+
+fun getRoll(rollValue: Int): Roll {
+    val rollAttributes = RollDataAttributes()
+    rollAttributes.value = rollValue
+    val rollData = RollData()
+    rollData.attributes = rollAttributes
+    val roll = Roll()
+    roll.data = rollData
+    return roll
+}
 
 fun apiNotImplementedResponse(): ResponseEntity<Any> {
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", " API not implemented")
-    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "500",  "500 API NOT IMPLEMENTED", httpHeaders)
+    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "500", "500 API NOT IMPLEMENTED", httpHeaders)
 }
-
-//fun positiveFrameCreationResponse(frameJson: FrameJson) : ResponseEntity<Any> {
-//    val httpHeaders = HttpHeaders()
-//    httpHeaders.add("description", "201 CREATED: roll correctly acquired")
-//    return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(frameJson)
-//}
