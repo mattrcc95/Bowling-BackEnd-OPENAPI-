@@ -1,0 +1,9 @@
+pom.xml
+README.md
+src/main/java/io/**
+src/main/java/**/*Controller.java
+src/main/java/**/api/*
+src/main/resources/**
+src/test/
+**/RFC3339DateFormat*
+**/Swagger2SpringBoot*

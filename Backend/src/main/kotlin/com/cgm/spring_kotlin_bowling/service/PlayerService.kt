@@ -92,26 +92,20 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
     fun <T : Any> toJsonApi(framePostgre: FramePostgre?, frameType: T) {
         if (framePostgre != null) {
             val type = frameType::class.java.simpleName
-            if (type == "DataFrame") { //from framePostgre to NoLinkFrame
-                val dataFrame = frameType as DataFrame
+                val dataFrame = frameType as FrameData
                 dataFrame.id = framePostgre.id.toString()
                 setAttributes(framePostgre, dataFrame.attributes)
-            } else {
-                val frameJson = frameType as FrameJson
-                frameJson.data.id = framePostgre.id.toString()
-                setAttributes(framePostgre, frameJson.data.attributes)
-            }
         }
     }
 
     private fun setAttributes(
         frame: FramePostgre,
-        attributes: AttributesFrame
+        attributes: FrameDataAttributes
     ) {
         attributes.shot1 = frame.shot1
         attributes.shot2 = frame.shot2
         attributes.shot3 = frame.shot3
-        attributes.localScore = frame.score
+        attributes.score = frame.score
         attributes.flag = frame.flag
     }
 

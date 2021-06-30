@@ -1,5 +1,6 @@
 package com.cgm.spring_kotlin_bowling.service
 
+import com.cgm.spring_kotlin_bowling.jsonApiModels.ErrorDataAttributes
 import com.cgm.spring_kotlin_bowling.jsonApiModels.Roll
 import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
 import com.cgm.spring_kotlin_bowling.spring_data_models.Frame

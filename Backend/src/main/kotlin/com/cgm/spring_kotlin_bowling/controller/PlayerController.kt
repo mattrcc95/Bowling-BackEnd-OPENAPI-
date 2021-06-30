@@ -20,7 +20,7 @@ class PlayerController(private val playerService: PlayerService) {
         scoreboard.links.self = "$baseLink/scoreboard/frames"
         val frameList = playerService.getScoreBoard()
         frameList.forEach { frame ->
-            val dataFrame = DataFrame()
+            val dataFrame = Frame()
             this.playerService.toJsonApi(frame, dataFrame)
             scoreboard.data.add(dataFrame)
         }
@@ -42,7 +42,7 @@ class PlayerController(private val playerService: PlayerService) {
     fun getFrame(@PathVariable id: String): ResponseEntity<Any> {
         val lastID = this.playerService.getLastId()
         return if ((id == "last" && lastID != 0) || (id.toInt() in 1 until lastID)) {
-            val frameJson = FrameJson()
+            val frameJson = Frame()
             frameJson.links?.self = "$baseLink/scoreboard/frames/$id"
             if (id == "last") {
                 val frame = this.playerService.getLastFrame()
@@ -76,7 +76,7 @@ class PlayerController(private val playerService: PlayerService) {
 
     //NOT IMPLEMENTED APIs:
     @RequestMapping("/scoreboard/frames/", method = [RequestMethod.POST], produces = [MIME_JSONAPI])
-    fun createLastFrame(@RequestBody frame: NoIdFrameJson): ResponseEntity<Any> {
+    fun createLastFrame(@RequestBody frame: Frame): ResponseEntity<Any> {
         return apiNotImplementedResponse()
     }
 
