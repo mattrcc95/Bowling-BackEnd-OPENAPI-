@@ -5,7 +5,7 @@ import com.cmg.SpringKotlinBowling.persistenceModels.FramePostgre
 import com.cmg.SpringKotlinBowling.springDataModels.Frame
 import org.springframework.stereotype.Component
 
-const val boud = 10
+const val bound = 10
 
 @Component
 class Game_Api() {

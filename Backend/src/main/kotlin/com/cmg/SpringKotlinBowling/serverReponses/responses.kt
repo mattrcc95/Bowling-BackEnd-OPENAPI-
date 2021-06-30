@@ -78,8 +78,8 @@ fun negativeFrameDeletionResponseNOTFOUND(id: String) : ResponseEntity<Any> {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(httpHeaders).body(errorTemplate)
 }
 
-fun positiveFrameCreationResponse(frameJson: FrameJson) : ResponseEntity<Any> {
-    val httpHeaders = HttpHeaders()
-    httpHeaders.add("description", "201 CREATED: roll correctly acquired")
-    return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(frameJson)
-}
+//fun positiveFrameCreationResponse(frameJson: FrameJson) : ResponseEntity<Any> {
+//    val httpHeaders = HttpHeaders()
+//    httpHeaders.add("description", "201 CREATED: roll correctly acquired")
+//    return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(frameJson)
+//}
