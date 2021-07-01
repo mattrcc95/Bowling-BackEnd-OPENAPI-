@@ -1,9 +1,8 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
-import com.cgm.spring_kotlin_bowling.jsonApiModels.ErrorData;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -11,15 +10,38 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * error response model
+ * Frame with Link included
  */
-@ApiModel(description = "error response model")
+@ApiModel(description = "Frame with Link included")
 @Validated
-public class Error   {
-  @JsonProperty("data")
-  private ErrorData data = null;
+public class Frame   {
+  @JsonProperty("links")
+  private FrameLinks links = null;
 
-  public Error data(ErrorData data) {
+  @JsonProperty("data")
+  private FrameData data = null;
+
+  public Frame links(FrameLinks links) {
+    this.links = links;
+    return this;
+  }
+
+  /**
+   * Get links
+   * @return links
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+  public FrameLinks getLinks() {
+    return links;
+  }
+
+  public void setLinks(FrameLinks links) {
+    this.links = links;
+  }
+
+  public Frame data(FrameData data) {
     this.data = data;
     return this;
   }
@@ -32,11 +54,11 @@ public class Error   {
   @NotNull
 
   @Valid
-  public ErrorData getData() {
+  public FrameData getData() {
     return data;
   }
 
-  public void setData(ErrorData data) {
+  public void setData(FrameData data) {
     this.data = data;
   }
 
@@ -49,20 +71,22 @@ public class Error   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Error error = (Error) o;
-    return Objects.equals(this.data, error.data);
+    Frame frame = (Frame) o;
+    return Objects.equals(this.links, frame.links) &&
+        Objects.equals(this.data, frame.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(data);
+    return Objects.hash(links, data);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Error {\n");
+    sb.append("class Frame {\n");
     
+    sb.append("    links: ").append(toIndentedString(links)).append("\n");
     sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("}");
     return sb.toString();

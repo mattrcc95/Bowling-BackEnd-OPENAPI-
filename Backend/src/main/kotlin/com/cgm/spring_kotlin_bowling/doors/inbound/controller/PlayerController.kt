@@ -1,9 +1,9 @@
-package com.cgm.spring_kotlin_bowling.controller
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller
 
-import com.cgm.spring_kotlin_bowling.jsonApiModels.*
-import com.cgm.spring_kotlin_bowling.server_reponses.*
-import com.cgm.spring_kotlin_bowling.service.PlayRollResult
-import com.cgm.spring_kotlin_bowling.service.PlayerService
+import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.*
+import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.*
+import com.cgm.spring_kotlin_bowling.application.services.PlayRollResult
+import com.cgm.spring_kotlin_bowling.application.services.PlayerService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

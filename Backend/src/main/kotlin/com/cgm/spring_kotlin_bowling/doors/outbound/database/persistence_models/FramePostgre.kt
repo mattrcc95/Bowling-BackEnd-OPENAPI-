@@ -1,4 +1,4 @@
-package com.cgm.spring_kotlin_bowling.persistenceModels
+package com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models
 
 import javax.persistence.Entity
 import javax.persistence.Id

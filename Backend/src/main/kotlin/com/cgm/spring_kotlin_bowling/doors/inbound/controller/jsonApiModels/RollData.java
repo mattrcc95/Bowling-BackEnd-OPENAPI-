@@ -1,43 +1,38 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
-import com.cgm.spring_kotlin_bowling.jsonApiModels.RollData;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * value of the executed roll
+ * RollData
  */
-@ApiModel(description = "value of the executed roll")
 @Validated
-public class Roll   {
-  @JsonProperty("data")
-  private RollData data = null;
+public class RollData   {
+  @JsonProperty("attributes")
+  private RollDataAttributes attributes = null;
 
-  public Roll data(RollData data) {
-    this.data = data;
+  public RollData attributes(RollDataAttributes attributes) {
+    this.attributes = attributes;
     return this;
   }
 
   /**
-   * Get data
-   * @return data
+   * Get attributes
+   * @return attributes
   **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
+  @ApiModelProperty(value = "")
 
   @Valid
-  public RollData getData() {
-    return data;
+  public RollDataAttributes getAttributes() {
+    return attributes;
   }
 
-  public void setData(RollData data) {
-    this.data = data;
+  public void setAttributes(RollDataAttributes attributes) {
+    this.attributes = attributes;
   }
 
 
@@ -49,21 +44,21 @@ public class Roll   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Roll roll = (Roll) o;
-    return Objects.equals(this.data, roll.data);
+    RollData rollData = (RollData) o;
+    return Objects.equals(this.attributes, rollData.attributes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(data);
+    return Objects.hash(attributes);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Roll {\n");
+    sb.append("class RollData {\n");
     
-    sb.append("    data: ").append(toIndentedString(data)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
     sb.append("}");
     return sb.toString();
   }

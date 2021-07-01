@@ -1,39 +1,38 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * FrameLinks
+ * ErrorData
  */
 @Validated
-public class FrameLinks   {
-  @JsonProperty("self")
-  private String self = null;
+public class ErrorData   {
+  @JsonProperty("attributes")
+  private ErrorDataAttributes attributes = null;
 
-  public FrameLinks self(String self) {
-    this.self = self;
+  public ErrorData attributes(ErrorDataAttributes attributes) {
+    this.attributes = attributes;
     return this;
   }
 
   /**
-   * Get self
-   * @return self
+   * Get attributes
+   * @return attributes
   **/
   @ApiModelProperty(value = "")
 
-  public String getSelf() {
-    return self;
+  @Valid
+  public ErrorDataAttributes getAttributes() {
+    return attributes;
   }
 
-  public void setSelf(String self) {
-    this.self = self;
+  public void setAttributes(ErrorDataAttributes attributes) {
+    this.attributes = attributes;
   }
 
 
@@ -45,21 +44,21 @@ public class FrameLinks   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FrameLinks frameLinks = (FrameLinks) o;
-    return Objects.equals(this.self, frameLinks.self);
+    ErrorData errorData = (ErrorData) o;
+    return Objects.equals(this.attributes, errorData.attributes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(self);
+    return Objects.hash(attributes);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FrameLinks {\n");
+    sb.append("class ErrorData {\n");
     
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
+    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
     sb.append("}");
     return sb.toString();
   }

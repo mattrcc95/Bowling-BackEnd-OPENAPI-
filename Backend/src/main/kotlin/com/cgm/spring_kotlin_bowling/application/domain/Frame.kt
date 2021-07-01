@@ -1,4 +1,4 @@
-package com.cgm.spring_kotlin_bowling.spring_data_models
+package com.cgm.spring_kotlin_bowling.application.domain
 
 data class Frame(
     var id: Int,

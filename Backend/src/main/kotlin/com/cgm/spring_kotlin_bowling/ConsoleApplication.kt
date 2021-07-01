@@ -1,8 +1,8 @@
 package com.cgm.spring_kotlin_bowling
 
-import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
-import com.cgm.spring_kotlin_bowling.service.PlayRollResult
-import com.cgm.spring_kotlin_bowling.service.PlayerService
+import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
+import com.cgm.spring_kotlin_bowling.application.services.PlayRollResult
+import com.cgm.spring_kotlin_bowling.application.services.PlayerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -32,9 +32,6 @@ class SpringBootConsoleApplication(
     @Autowired private val playerService: PlayerService
 ) : CommandLineRunner {
 
-    //MAP : positiveRollResponse -> 1
-    //      negativeRollResponse -> 0
-    //      gameEndsResponse -> -1
     override fun run(vararg args: String?) {
         var gameKeepsGoing = true
         while (gameKeepsGoing) {

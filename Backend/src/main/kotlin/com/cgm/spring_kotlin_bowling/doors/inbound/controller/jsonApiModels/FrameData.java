@@ -1,14 +1,11 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
-import com.cgm.spring_kotlin_bowling.jsonApiModels.FrameDataAttributes;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * FrameData

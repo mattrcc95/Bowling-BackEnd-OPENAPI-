@@ -1,9 +1,7 @@
-package com.cgm.spring_kotlin_bowling.service
+package com.cgm.spring_kotlin_bowling.application.services
 
-import com.cgm.spring_kotlin_bowling.jsonApiModels.ErrorDataAttributes
-import com.cgm.spring_kotlin_bowling.jsonApiModels.Roll
-import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
-import com.cgm.spring_kotlin_bowling.spring_data_models.Frame
+import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
+import com.cgm.spring_kotlin_bowling.application.domain.Frame
 import org.springframework.stereotype.Component
 
 const val bound = 10

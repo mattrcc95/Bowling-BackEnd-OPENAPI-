@@ -1,5 +1,5 @@
-package com.cgm.spring_kotlin_bowling.repository
-import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
+package com.cgm.spring_kotlin_bowling.doors.outbound.database.repository
+import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

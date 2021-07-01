@@ -1,9 +1,8 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
-import com.cgm.spring_kotlin_bowling.jsonApiModels.RollDataAttributes;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -11,31 +10,33 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * RollData
+ * error response model
  */
+@ApiModel(description = "error response model")
 @Validated
-public class RollData   {
-  @JsonProperty("attributes")
-  private RollDataAttributes attributes = null;
+public class Error   {
+  @JsonProperty("data")
+  private ErrorData data = null;
 
-  public RollData attributes(RollDataAttributes attributes) {
-    this.attributes = attributes;
+  public Error data(ErrorData data) {
+    this.data = data;
     return this;
   }
 
   /**
-   * Get attributes
-   * @return attributes
+   * Get data
+   * @return data
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
   @Valid
-  public RollDataAttributes getAttributes() {
-    return attributes;
+  public ErrorData getData() {
+    return data;
   }
 
-  public void setAttributes(RollDataAttributes attributes) {
-    this.attributes = attributes;
+  public void setData(ErrorData data) {
+    this.data = data;
   }
 
 
@@ -47,21 +48,21 @@ public class RollData   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RollData rollData = (RollData) o;
-    return Objects.equals(this.attributes, rollData.attributes);
+    Error error = (Error) o;
+    return Objects.equals(this.data, error.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(attributes);
+    return Objects.hash(data);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RollData {\n");
+    sb.append("class Error {\n");
     
-    sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,8 +1,8 @@
-package com.cgm.spring_kotlin_bowling.jsonApiModels;
+package com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -10,30 +10,33 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * RollDataAttributes
+ * value of the executed roll
  */
+@ApiModel(description = "value of the executed roll")
 @Validated
-public class RollDataAttributes   {
-  @JsonProperty("value")
-  private Integer value = null;
+public class Roll   {
+  @JsonProperty("data")
+  private RollData data = null;
 
-  public RollDataAttributes value(Integer value) {
-    this.value = value;
+  public Roll data(RollData data) {
+    this.data = data;
     return this;
   }
 
   /**
-   * Get value
-   * @return value
+   * Get data
+   * @return data
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
-  public Integer getValue() {
-    return value;
+  @Valid
+  public RollData getData() {
+    return data;
   }
 
-  public void setValue(Integer value) {
-    this.value = value;
+  public void setData(RollData data) {
+    this.data = data;
   }
 
 
@@ -45,21 +48,21 @@ public class RollDataAttributes   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RollDataAttributes rollDataAttributes = (RollDataAttributes) o;
-    return Objects.equals(this.value, rollDataAttributes.value);
+    Roll roll = (Roll) o;
+    return Objects.equals(this.data, roll.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value);
+    return Objects.hash(data);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RollDataAttributes {\n");
+    sb.append("class Roll {\n");
     
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("}");
     return sb.toString();
   }

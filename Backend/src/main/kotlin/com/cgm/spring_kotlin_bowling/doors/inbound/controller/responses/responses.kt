@@ -1,7 +1,7 @@
-package com.cgm.spring_kotlin_bowling.server_reponses
+package com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses
 
-import com.cgm.spring_kotlin_bowling.jsonApiModels.*
-import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
+import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.*
+import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -80,7 +80,6 @@ fun apiNotImplementedResponse(): ResponseEntity<Any> {
 // NON E' UN CASO
 fun getJsonApiFrame(framePostgre: FramePostgre?, overrideId: String? = null): Frame {
     val frame = Frame()
-
     return framePostgre
         ?.let {
             frame.data = FrameData()
@@ -91,7 +90,6 @@ fun getJsonApiFrame(framePostgre: FramePostgre?, overrideId: String? = null): Fr
             frame
         }
         ?: frame
-    
 }
 
 private fun setAttributes(
