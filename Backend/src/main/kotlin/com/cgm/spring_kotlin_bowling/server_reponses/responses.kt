@@ -77,15 +77,21 @@ fun apiNotImplementedResponse(): ResponseEntity<Any> {
     return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "500", "500 API NOT IMPLEMENTED", httpHeaders)
 }
 
-fun toJsonApi(framePostgre: FramePostgre?, frame: Frame) {
-    if (framePostgre != null) {
-        frame.data = FrameData()
-        val dataFrame = frame.data
-        dataFrame.id = framePostgre.id.toString()
+// NON E' UN CASO
+fun getJsonApiFrame(framePostgre: FramePostgre?, overrideId: String? = null): Frame {
+    val frame = Frame()
 
-        dataFrame.attributes = FrameDataAttributes()
-        setAttributes(framePostgre, dataFrame.attributes)
-    }
+    return framePostgre
+        ?.let {
+            frame.data = FrameData()
+            val dataFrame = frame.data
+            dataFrame.id = overrideId ?: framePostgre.id.toString()
+            dataFrame.attributes = FrameDataAttributes()
+            setAttributes(framePostgre, dataFrame.attributes)
+            frame
+        }
+        ?: frame
+    
 }
 
 private fun setAttributes(

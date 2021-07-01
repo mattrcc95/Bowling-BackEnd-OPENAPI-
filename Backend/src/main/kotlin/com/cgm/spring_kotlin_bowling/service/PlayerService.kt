@@ -22,10 +22,7 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
     fun getFrameByID(id: Int): FramePostgre? = playerRepository.findByIdOrNull(id)
 
 
-    //MAP : positiveRollResponse -> 1
-    //      negativeRollResponse -> 0
-    //      gameEndsResponse -> -1
-    fun playRoll(rollValue: Int): Int {
+    fun playRoll(rollValue: Int): PlayRollResult {
         val currentFrame = Frame(0, rollValue, arrayListOf(), 0, 0, "", false, false)
         if (game.isEmpty()) {
             currentFrame.id = 1
@@ -41,7 +38,7 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
                     lastFrame.currentShot = rollValue
                     getRollResponse(rollValue, lastFrame, false)
                 }
-            } else -1
+            } else PlayRollResult.ENDGAME
         }
     }
 
@@ -49,15 +46,22 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
         rollValue: Int,
         currentFrame: Frame,
         isToAdd: Boolean
-    ): Int {
+    ): PlayRollResult {
         return if (gameApi.rollIsValid(rollValue, currentFrame)) {
             if (isToAdd)
                 game.add(currentFrame)
             val scoreBoard = gameApi.play(game)
             scoreBoard.forEach { framePostgre -> uploadFrame(framePostgre) }
-            1
-        } else 0
+
+            PlayRollResult.ROLl_ACCEPTED
+        } else PlayRollResult.ROLL_REJECTED
     }
 
+}
+
+enum class PlayRollResult {
+    ROLl_ACCEPTED,
+    ROLL_REJECTED,
+    ENDGAME
 }
 

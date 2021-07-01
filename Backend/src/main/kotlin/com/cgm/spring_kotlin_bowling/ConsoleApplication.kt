@@ -1,6 +1,7 @@
 package com.cgm.spring_kotlin_bowling
 
 import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
+import com.cgm.spring_kotlin_bowling.service.PlayRollResult
 import com.cgm.spring_kotlin_bowling.service.PlayerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
@@ -41,15 +42,15 @@ class SpringBootConsoleApplication(
             while (!rollIsValid) {
                 println(message)
                 val rollValue = sc.nextInt()
-                val response = playerService.playRoll(rollValue)
-                if (response == 0) {
-                    println(errMessage)
-                } else if (response == 1) {
-                    rollIsValid = true
-                } else {
-                    println(endsMessage)
-                    gameKeepsGoing = false
-                    break
+
+                when(playerService.playRoll(rollValue)) {
+                    PlayRollResult.ROLl_ACCEPTED -> rollIsValid = true
+                    PlayRollResult.ROLL_REJECTED -> println(errMessage)
+                    PlayRollResult.ENDGAME ->  {
+                        println(endsMessage)
+                        gameKeepsGoing = false
+                        break
+                    }
                 }
             }
             printScoreboard(playerService.getScoreBoard())

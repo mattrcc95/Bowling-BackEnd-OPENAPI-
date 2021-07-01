@@ -2,6 +2,7 @@ package com.cgm.spring_kotlin_bowling.controller
 
 import com.cgm.spring_kotlin_bowling.jsonApiModels.*
 import com.cgm.spring_kotlin_bowling.server_reponses.*
+import com.cgm.spring_kotlin_bowling.service.PlayRollResult
 import com.cgm.spring_kotlin_bowling.service.PlayerService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,11 +20,10 @@ class PlayerController(private val playerService: PlayerService) {
         val scoreboard = Scoreboard()
         scoreboard.links.self = "$baseLink/scoreboard/frames"
         val frameList = playerService.getScoreBoard()
-        frameList.forEach { frame ->
-            val dataFrame = Frame()
-            toJsonApi(frame, dataFrame)
-            scoreboard.data.add(dataFrame)
-        }
+
+        val jsonApiFrames = frameList.map { getJsonApiFrame(it) }
+        scoreboard.data.addAll(jsonApiFrames)
+
         return positiveScoreboardFetchingResponse(scoreboard)
     }
 
@@ -36,11 +36,10 @@ class PlayerController(private val playerService: PlayerService) {
     @RequestMapping("/scoreboard/frames/rolls", method = [RequestMethod.POST], produces = [MIME_JSONAPI])
     fun getRoll(@RequestBody roll: Roll): ResponseEntity<Any> {
         val rollValue = roll.data.attributes.value
-        val response = this.playerService.playRoll(rollValue)
-        return when(response){
-            1 -> positiveRollResponse(rollValue)
-            0 -> negativeRollResponse()
-            else -> gameEndsReponse()
+        return when(this.playerService.playRoll(rollValue)){
+            PlayRollResult.ROLl_ACCEPTED -> positiveRollResponse(rollValue)
+            PlayRollResult.ROLL_REJECTED -> negativeRollResponse()
+            PlayRollResult.ENDGAME -> gameEndsReponse()
         }
     }
 
@@ -48,16 +47,16 @@ class PlayerController(private val playerService: PlayerService) {
     fun getFrame(@PathVariable id: String): ResponseEntity<Any> {
         val lastID = this.playerService.getLastId()
         return if ((id == "last" && lastID != 0) || (id.toInt() in 1 until lastID)) {
-            val frameJson = Frame()
-            frameJson.links?.self = "$baseLink/scoreboard/frames/$id"
-            if (id == "last") {
+
+            val frameJson = if (id == "last") {
                 val frame = this.playerService.getLastFrame()
-                toJsonApi(frame, frameJson)
-                frameJson.data.id = "last" //overwrite ID with last
+                getJsonApiFrame(frame, "last") //overwrite ID with last
             } else {
                 val frame = this.playerService.getFrameByID(id.toInt())
-                toJsonApi(frame, frameJson)
+                getJsonApiFrame(frame)
             }
+            frameJson.links?.self = "$baseLink/scoreboard/frames/$id"
+
             positiveFrameFetchingResponse(frameJson, id)
         } else
             negativeFrameFetchingResponse(id)
