@@ -21,7 +21,7 @@ class PlayerController(private val playerService: PlayerService) {
         val frameList = playerService.getScoreBoard()
         frameList.forEach { frame ->
             val dataFrame = Frame()
-            this.playerService.toJsonApi(frame, dataFrame)
+            toJsonApi(frame, dataFrame)
             scoreboard.data.add(dataFrame)
         }
         return positiveScoreboardFetchingResponse(scoreboard)
@@ -36,7 +36,12 @@ class PlayerController(private val playerService: PlayerService) {
     @RequestMapping("/scoreboard/frames/rolls", method = [RequestMethod.POST], produces = [MIME_JSONAPI])
     fun getRoll(@RequestBody roll: Roll): ResponseEntity<Any> {
         val rollValue = roll.data.attributes.value
-        return this.playerService.playRoll(rollValue)
+        val response = this.playerService.playRoll(rollValue)
+        return when(response){
+            1 -> positiveRollResponse(rollValue)
+            0 -> negativeRollResponse()
+            else -> gameEndsReponse()
+        }
     }
 
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.GET], produces = [MIME_JSONAPI])
@@ -47,11 +52,11 @@ class PlayerController(private val playerService: PlayerService) {
             frameJson.links?.self = "$baseLink/scoreboard/frames/$id"
             if (id == "last") {
                 val frame = this.playerService.getLastFrame()
-                this.playerService.toJsonApi(frame, frameJson)
+                toJsonApi(frame, frameJson)
                 frameJson.data.id = "last" //overwrite ID with last
             } else {
                 val frame = this.playerService.getFrameByID(id.toInt())
-                this.playerService.toJsonApi(frame, frameJson)
+                toJsonApi(frame, frameJson)
             }
             positiveFrameFetchingResponse(frameJson, id)
         } else

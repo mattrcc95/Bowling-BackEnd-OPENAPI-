@@ -1,6 +1,7 @@
 package com.cgm.spring_kotlin_bowling.server_reponses
 
 import com.cgm.spring_kotlin_bowling.jsonApiModels.*
+import com.cgm.spring_kotlin_bowling.persistenceModels.FramePostgre
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -74,4 +75,26 @@ fun apiNotImplementedResponse(): ResponseEntity<Any> {
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", " API not implemented")
     return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "500", "500 API NOT IMPLEMENTED", httpHeaders)
+}
+
+fun toJsonApi(framePostgre: FramePostgre?, frame: Frame) {
+    if (framePostgre != null) {
+        frame.data = FrameData()
+        val dataFrame = frame.data
+        dataFrame.id = framePostgre.id.toString()
+
+        dataFrame.attributes = FrameDataAttributes()
+        setAttributes(framePostgre, dataFrame.attributes)
+    }
+}
+
+private fun setAttributes(
+    frame: FramePostgre,
+    attributes: FrameDataAttributes
+) {
+    attributes.shot1 = frame.shot1
+    attributes.shot2 = frame.shot2
+    attributes.shot3 = frame.shot3
+    attributes.score = frame.score
+    attributes.flag = frame.flag
 }
