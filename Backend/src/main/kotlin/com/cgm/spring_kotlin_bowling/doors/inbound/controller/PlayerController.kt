@@ -18,12 +18,13 @@ class PlayerController(private val playerService: PlayerService) {
     @RequestMapping("/scoreboard/frames", method = [RequestMethod.GET], produces = [MIME_JSONAPI])
     fun getAllFrames(): ResponseEntity<Any> {
         val scoreboard = Scoreboard()
+        val links = FrameLinks()
+        scoreboard.links = links
         scoreboard.links.self = "$baseLink/scoreboard/frames"
         val frameList = playerService.getScoreBoard()
 
         val jsonApiFrames = frameList.map { getJsonApiFrame(it) }
         scoreboard.data.addAll(jsonApiFrames)
-
         return positiveScoreboardFetchingResponse(scoreboard)
     }
 

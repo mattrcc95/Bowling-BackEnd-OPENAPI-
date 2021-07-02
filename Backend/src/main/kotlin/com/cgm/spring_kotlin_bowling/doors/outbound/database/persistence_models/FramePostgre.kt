@@ -2,7 +2,9 @@ package com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models
 
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.Table
 
+@Table(name = "frame")
 @Entity
 data class FramePostgre(
     @Id var id: Int,
