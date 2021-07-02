@@ -1,7 +1,7 @@
 package com.cgm.spring_kotlin_bowling.application.services
 
-import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import com.cgm.spring_kotlin_bowling.application.domain.Frame
+import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import org.springframework.stereotype.Component
 
 const val bound = 10
@@ -33,7 +33,6 @@ class GameApi {
         game.forEach { frame -> list.add(mapFrameToPostgre(frame)) }
         return list
     }
-
 
 
     //logic to check if a given frame is expired and, eventually, assigning bonusShot != 0
@@ -82,16 +81,16 @@ class GameApi {
         return rollValue in 0..getThreshold(currentFrame)
     }
 
-    private fun getThreshold(currentFrame: Frame): Int {
+    fun getThreshold(currentFrame: Frame): Int {
         val localScore = currentFrame.frameShots.sum()
-
-        return when(currentFrame.id) {
+        return when (currentFrame.id) {
             LAST_FRAME_ID -> getThresholdLast(currentFrame, localScore)
-            else -> getThresholdBeforeLast(currentFrame, localScore)
+            else -> bound - localScore
         }
     }
 
-    private fun getThresholdLast(currentFrame: Frame, localScore: Int) : Int {
+
+    private fun getThresholdLast(currentFrame: Frame, localScore: Int): Int {
         return if (currentFrame.frameShots.size < 2 && localScore < 10) {
             bound - localScore
         } else if (currentFrame.frameShots.size == 2 && currentFrame.frameShots[1] < 10)
@@ -101,9 +100,7 @@ class GameApi {
         }
     }
 
-    private fun getThresholdBeforeLast(currentFrame: Frame, localScore: Int) = bound - localScore
-
-    //logic to map a frame (springDataModel) to a framePostgre (persistence model) object
+    //logic to map a frame to a framePostgre (persistence model) object
     fun mapFrameToPostgre(frame: Frame): FramePostgre {
         val framePostgre = FramePostgre(0, null, null, null, 0, "")
         framePostgre.score = frame.localScore

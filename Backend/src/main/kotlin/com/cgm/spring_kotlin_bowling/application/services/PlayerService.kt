@@ -3,7 +3,6 @@ package com.cgm.spring_kotlin_bowling.application.services
 import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import com.cgm.spring_kotlin_bowling.doors.outbound.database.repository.PlayerRepository
 import com.cgm.spring_kotlin_bowling.application.domain.Frame
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -54,7 +53,6 @@ class PlayerService(
                 game.add(currentFrame)
             val scoreBoard = gameApi.play(game)
             scoreBoard.forEach { framePostgre -> uploadFrame(framePostgre) }
-
             PlayRollResult.ROLl_ACCEPTED
         } else PlayRollResult.ROLL_REJECTED
     }

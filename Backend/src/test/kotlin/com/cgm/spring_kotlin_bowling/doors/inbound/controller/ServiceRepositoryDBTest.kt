@@ -3,10 +3,6 @@ package com.cgm.spring_kotlin_bowling.doors.inbound.controller
 import com.cgm.spring_kotlin_bowling.SpringKotlinBowlingApplication
 import com.cgm.spring_kotlin_bowling.application.services.PlayRollResult
 import com.cgm.spring_kotlin_bowling.application.services.PlayerService
-import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.Roll
-import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.play
-import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.negativeRollResponse
-import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.positiveRollResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest
 
 //TESTS HEXAGONE :  SERVICE -> REPOS -> DB
 @SpringBootTest(classes = [SpringKotlinBowlingApplication::class])
-class PlayerServiceTest(
+class ServiceRepositoryDBTest(
     @Autowired private val playerService: PlayerService
 ) {
 
@@ -47,7 +43,7 @@ class PlayerServiceTest(
     }
 
     @Test
-    fun `GIVEN a VALID roll and then INVALID roll the latter is rejected`() {
+    fun `GIVEN a VALID roll and then invalid WHEN the latter is played THEN it is rejected`() {
         val roll1Value = 3
         playerService.playRoll(roll1Value)
         val roll2Value = 8
@@ -56,13 +52,5 @@ class PlayerServiceTest(
 
         assertEquals(response2, PlayRollResult.ROLL_REJECTED)
     }
-
-    //GENERATE A SERIES OF ACCEPTABLE ROLLS, THEN VERIFY THAT "GAME ENDS" IS DROPPED AT THE END
-    fun `GIVEN sample game, THEN throws "game has ended response" at the end`() {
-
-    }
-    //GENERATE SAMPLE GAME, THEN VERIFY THAT THE FINAL SCORE IS CORRECT
-
-
 
 }

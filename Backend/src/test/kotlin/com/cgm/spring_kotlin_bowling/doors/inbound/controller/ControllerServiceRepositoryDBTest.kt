@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 
-//TESTS HEXAGONE SIDE BY SIDE: CONTROLLER -> SERVICE -> REPOS -> DB
 @SpringBootTest(classes = [SpringKotlinBowlingApplication::class])
-class PlayerControllerTest(
+class ControllerServiceRepositoryDBTest(
     @Autowired private val playerController: PlayerController
 ) {
 
@@ -40,7 +39,7 @@ class PlayerControllerTest(
     }
 
     @Test
-    fun `GIVEN a VALID roll and then INVALID roll the latter is rejected`() {
+    fun `GIVEN a valid roll and then invalid WHEN the latter is played THEN it is rejected`() {
         val roll1 = play(3)
         playerController.play(roll1)
         val roll2 = play(9)
@@ -49,13 +48,5 @@ class PlayerControllerTest(
 
         assertEquals(responsePOST2, negativeRollResponse())
     }
-
-    //GENERATE A SERIES OF ACCEPTABLE ROLLS, THEN VERIFY THAT "GAME ENDS" IS DROPPED AT THE END
-    fun `GIVEN sample game, THEN throws "game has ended response" at the end`() {
-
-    }
-    //GENERATE SAMPLE GAME, THEN VERIFY THAT THE FINAL SCORE IS CORRECT
-
-
 
 }
