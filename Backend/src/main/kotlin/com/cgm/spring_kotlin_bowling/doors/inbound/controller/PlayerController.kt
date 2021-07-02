@@ -4,6 +4,7 @@ import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.*
 import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.*
 import com.cgm.spring_kotlin_bowling.application.services.PlayRollResult
 import com.cgm.spring_kotlin_bowling.application.services.PlayerService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -12,7 +13,7 @@ const val MIME_JSONAPI = "application/vnd.api+json"
 @RestController
 @CrossOrigin("http://localhost:4200")
 @RequestMapping("/api/v1")
-class PlayerController(private val playerService: PlayerService) {
+class PlayerController(@Autowired private val playerService: PlayerService) {
     val baseLink = "http://localhost:8080/api/v1"
 
     @RequestMapping("/scoreboard/frames", method = [RequestMethod.GET], produces = [MIME_JSONAPI])
@@ -22,7 +23,6 @@ class PlayerController(private val playerService: PlayerService) {
         scoreboard.links = links
         scoreboard.links.self = "$baseLink/scoreboard/frames"
         val frameList = playerService.getScoreBoard()
-
         val jsonApiFrames = frameList.map { getJsonApiFrame(it) }
         scoreboard.data.addAll(jsonApiFrames)
         return positiveScoreboardFetchingResponse(scoreboard)
@@ -35,7 +35,7 @@ class PlayerController(private val playerService: PlayerService) {
     }
 
     @RequestMapping("/scoreboard/frames/rolls", method = [RequestMethod.POST], produces = [MIME_JSONAPI])
-    fun getRoll(@RequestBody roll: Roll): ResponseEntity<Any> {
+    fun play(@RequestBody roll: Roll): ResponseEntity<Any> {
         val rollValue = roll.data.attributes.value
         return when(this.playerService.playRoll(rollValue)){
             PlayRollResult.ROLl_ACCEPTED -> positiveRollResponse(rollValue)
@@ -45,7 +45,7 @@ class PlayerController(private val playerService: PlayerService) {
     }
 
     @RequestMapping("/scoreboard/frames/{id}", method = [RequestMethod.GET], produces = [MIME_JSONAPI])
-    fun getFrame(@PathVariable id: String): ResponseEntity<Any> {
+    fun getFrameByID(@PathVariable id: String): ResponseEntity<Any> {
         val lastID = this.playerService.getLastId()
         return if ((id == "last" && lastID != 0) || (id.toInt() in 1 until lastID)) {
 

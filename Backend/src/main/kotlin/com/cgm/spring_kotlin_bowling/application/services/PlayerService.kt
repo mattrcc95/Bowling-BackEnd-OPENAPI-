@@ -3,11 +3,15 @@ package com.cgm.spring_kotlin_bowling.application.services
 import com.cgm.spring_kotlin_bowling.doors.outbound.database.persistence_models.FramePostgre
 import com.cgm.spring_kotlin_bowling.doors.outbound.database.repository.PlayerRepository
 import com.cgm.spring_kotlin_bowling.application.domain.Frame
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class PlayerService(private val playerRepository: PlayerRepository, private val gameApi: GameApi) {
+class PlayerService(
+    private var playerRepository: PlayerRepository,
+    private var gameApi: GameApi
+){
     private var game = arrayListOf<Frame>()
 
     fun getScoreBoard(): ArrayList<FramePostgre> = playerRepository.findAll() as ArrayList<FramePostgre>
@@ -19,7 +23,6 @@ class PlayerService(private val playerRepository: PlayerRepository, private val 
     fun getLastFrame(): FramePostgre = playerRepository.getLastFrame()
     fun getLastId(): Int = playerRepository.getLastId()
     fun getFrameByID(id: Int): FramePostgre? = playerRepository.findByIdOrNull(id)
-
 
     fun playRoll(rollValue: Int): PlayRollResult {
         val currentFrame = Frame(0, rollValue, arrayListOf(), 0, 0, "", false, false)

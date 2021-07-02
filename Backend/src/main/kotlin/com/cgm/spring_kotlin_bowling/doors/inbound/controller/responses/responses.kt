@@ -11,10 +11,10 @@ private typealias JsonApiError = Error
 fun negativeFrameFetchingResponse(id: String) =
     buildResponse(HttpStatus.NOT_FOUND, "404", "404 NOT FOUND: frame with ID $id not found")
 
-fun positiveFrameFetchingResponse(frameJson: Frame, id: String): ResponseEntity<Any> {
+fun positiveFrameFetchingResponse(frame: Frame, id: String): ResponseEntity<Any> {
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", "200 OK: frame with ID $id correctly fetched")
-    return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(frameJson)
+    return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(frame)
 }
 
 fun positiveScoreboardFetchingResponse(scoreboard: Scoreboard): ResponseEntity<Any> {
@@ -47,7 +47,7 @@ private fun buildResponse(
 }
 
 fun positiveRollResponse(rollValue: Int): ResponseEntity<Any> {
-    val roll = getRoll(rollValue)
+    val roll = play(rollValue)
     roll.data.attributes.value = rollValue
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", "201 CREATED: roll correctly acquired")
@@ -61,7 +61,7 @@ fun gameEndsReponse(): ResponseEntity<Any> =
     buildResponse400("400 BAD REQUEST: game has ended")
 
 
-fun getRoll(rollValue: Int): Roll {
+fun play(rollValue: Int): Roll {
     val rollAttributes = RollDataAttributes()
     rollAttributes.value = rollValue
     val rollData = RollData()
@@ -102,3 +102,4 @@ private fun setAttributes(
     attributes.score = frame.score
     attributes.flag = frame.flag
 }
+
