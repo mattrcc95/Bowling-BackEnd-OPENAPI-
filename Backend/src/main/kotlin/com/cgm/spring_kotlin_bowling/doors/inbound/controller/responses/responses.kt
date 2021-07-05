@@ -51,7 +51,7 @@ fun positiveRollResponse(rollValue: Int): ResponseEntity<Any> {
     roll.data.attributes.value = rollValue
     val httpHeaders = HttpHeaders()
     httpHeaders.add("description", "201 CREATED: roll correctly acquired")
-    return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(roll)
+    return ResponseEntity.status(HttpStatus.CREATED).body(roll)
 }
 
 fun negativeRollResponse(): ResponseEntity<Any> =

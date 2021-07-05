@@ -30,7 +30,7 @@ class ServiceRepositoryDBTest(
 
         val response = playerService.playRoll(rollValue)
 
-        assertEquals(response, PlayRollResult.ROLl_ACCEPTED)
+        assertEquals(response, PlayRollResult.ROLL_ACCEPTED)
     }
 
     @Test
@@ -47,9 +47,7 @@ class ServiceRepositoryDBTest(
         val roll1Value = 3
         playerService.playRoll(roll1Value)
         val roll2Value = 8
-
         val response2 = playerService.playRoll(roll2Value)
-
         assertEquals(response2, PlayRollResult.ROLL_REJECTED)
     }
 

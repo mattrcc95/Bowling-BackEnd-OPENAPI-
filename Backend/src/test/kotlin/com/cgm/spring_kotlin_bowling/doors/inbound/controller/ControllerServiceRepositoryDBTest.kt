@@ -16,14 +16,12 @@ class ControllerServiceRepositoryDBTest(
     @Autowired private val playerController: PlayerController
 ) {
 
-    //           GIVEN    WHEN   THEN
-    // AAA:    Arrange    Act    Assert
     @BeforeEach
     fun clearDB() {
         playerController.deleteAllFrames()
     }
 
-    //test the in-bound door
+
     @Test
     fun `GIVEN a VALID roll WHEN it is played THEN positive response is returned`() {
         val roll = play(4)

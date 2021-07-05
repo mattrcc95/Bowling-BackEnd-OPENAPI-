@@ -53,14 +53,22 @@ class PlayerService(
                 game.add(currentFrame)
             val scoreBoard = gameApi.play(game)
             scoreBoard.forEach { framePostgre -> uploadFrame(framePostgre) }
-            PlayRollResult.ROLl_ACCEPTED
+            PlayRollResult.ROLL_ACCEPTED
         } else PlayRollResult.ROLL_REJECTED
+    }
+
+    fun getGame() : ArrayList<Frame> {
+        return game
+    }
+
+    fun clearGame() {
+        game = arrayListOf<Frame>()
     }
 
 }
 
 enum class PlayRollResult {
-    ROLl_ACCEPTED,
+    ROLL_ACCEPTED,
     ROLL_REJECTED,
     ENDGAME
 }

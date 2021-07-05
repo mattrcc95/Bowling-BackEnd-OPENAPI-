@@ -43,7 +43,7 @@ class ServiceWithMockedRepository(
     fun `GIVEN a VALID roll WHEN it is played THEN positive response is returned`() {
         val rollValue = 4
         val response = playerService.playRoll(rollValue)
-        assertEquals(response, PlayRollResult.ROLl_ACCEPTED)
+        assertEquals(response, PlayRollResult.ROLL_ACCEPTED)
     }
 
     @Test

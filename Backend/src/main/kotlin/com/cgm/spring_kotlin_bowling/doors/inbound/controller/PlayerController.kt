@@ -38,7 +38,7 @@ class PlayerController(@Autowired private val playerService: PlayerService) {
     fun play(@RequestBody roll: Roll): ResponseEntity<Any> {
         val rollValue = roll.data.attributes.value
         return when(this.playerService.playRoll(rollValue)){
-            PlayRollResult.ROLl_ACCEPTED -> positiveRollResponse(rollValue)
+            PlayRollResult.ROLL_ACCEPTED -> positiveRollResponse(rollValue)
             PlayRollResult.ROLL_REJECTED -> negativeRollResponse()
             PlayRollResult.ENDGAME -> gameEndsReponse()
         }

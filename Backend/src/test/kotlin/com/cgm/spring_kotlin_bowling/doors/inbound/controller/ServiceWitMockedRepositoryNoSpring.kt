@@ -45,7 +45,7 @@ class ServiceWitMockedRepositoryNoSpring {
     fun `GIVEN a VALID roll WHEN it is played THEN the roll is accepted`() {
         val rollValue = 4
         val response = playerService.playRoll(rollValue)
-        assertEquals(response, PlayRollResult.ROLl_ACCEPTED)
+        assertEquals(response, PlayRollResult.ROLL_ACCEPTED)
     }
 
     @Test
@@ -72,10 +72,10 @@ class ServiceWitMockedRepositoryNoSpring {
 
 
     @Test
-    fun `GIVEN a Frame WHEN the id is assessed, THEN the correct threshold is computed`() {
+    fun `GIVEN a Frame, WHEN the id is assessed, THEN the correct threshold is computed`() {
         val input = arrayOf(
-            Frame(1, 0, arrayListOf(3), 3, 0, "ciao", false, false),
-            Frame(10, 0, arrayListOf(10, 10), 3, 0, "ciao", false, false)
+            Frame(1, 0, arrayListOf(3), 3, 0, "", false, false),
+            Frame(10, 0, arrayListOf(10, 10), 3, 0, "", false, false)
         )
         val expected = arrayOf(7, 10)
         for (i in input.indices) {
@@ -83,5 +83,27 @@ class ServiceWitMockedRepositoryNoSpring {
         }
     }
 
+    @Test
+    fun `GIVEN an array of rolls, WHEN the game whole game is played, THEN the correct total score is returned`() {
+        val input1 = Array(20) { i -> 0 }
+        val input2 = Array(12) { i -> 10 }
+        val input3 = Array(21) { i -> if (i % 2 == 0) 6 else 4 }
+        val testSet = arrayListOf<GameTest>(
+            GameTest(input1, 0),
+            GameTest(input2, 300), GameTest(input3, 160)
+        )
+
+        for(i in testSet.indices) {
+            for(j in testSet[i].rolls.indices){
+                playerService.playRoll(testSet[i].rolls[j])
+            }
+            val gamePlayed = playerService.getGame()
+            val actualScore = gamePlayed[gamePlayed.lastIndex].localScore
+            assertEquals(testSet[i].expectedScore, actualScore)
+            playerService.clearGame()
+        }
+    }
+
+    class GameTest(val rolls: Array<Int>, val expectedScore: Int)
 
 }

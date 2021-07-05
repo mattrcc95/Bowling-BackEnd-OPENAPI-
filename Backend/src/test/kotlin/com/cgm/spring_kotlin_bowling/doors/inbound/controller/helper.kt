@@ -8,15 +8,15 @@ import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.*
 //    null, "X", 10
 //)
 
-//fun setRoll(rollValue: Int) : Roll {
-//    val attributes = RollDataAttributes()
-//    val data = RollData()
-//    val roll = Roll()
-//    roll.data = data
-//    roll.data.attributes = attributes
-//    roll.data.attributes.value = rollValue
-//    return roll
-//}
+fun setRoll(rollValue: Int) : Roll {
+    val attributes = RollDataAttributes()
+    val data = RollData()
+    val roll = Roll()
+    roll.data = data
+    roll.data.attributes = attributes
+    roll.data.attributes.value = rollValue
+    return roll
+}
 
 fun getFrame(
     id: String, shot1: Int?, shot2: Int?,

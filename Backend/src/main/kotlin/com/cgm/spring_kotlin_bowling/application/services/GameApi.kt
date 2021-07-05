@@ -34,7 +34,6 @@ class GameApi {
         return list
     }
 
-
     //logic to check if a given frame is expired and, eventually, assigning bonusShot != 0
     private fun assessCurrentFrameState(currentFrame: Frame) {
         val localScore = currentFrame.frameShots.fold(0) { sum, shot -> sum + shot }
