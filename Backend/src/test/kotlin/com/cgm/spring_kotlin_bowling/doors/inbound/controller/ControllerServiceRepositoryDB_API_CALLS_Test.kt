@@ -1,7 +1,6 @@
 package com.cgm.spring_kotlin_bowling.doors.inbound.controller
 
 
-import com.cgm.spring_kotlin_bowling.application.services.PlayerService
 import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.negativeRollResponse
 import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.positiveRollResponse
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,15 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc //generate configuration for mocking model view controller
 class ControllerServiceRepositoryDB_API_CALLS_Test @Autowired constructor(
     private val mockMvc: MockMvc,
-    private val objectMapper: ObjectMapper,
-    private val playerService: PlayerService,
+    private val objectMapper: ObjectMapper
 ) {
     val baseLink = "http://localhost:8080/api/v1"
 

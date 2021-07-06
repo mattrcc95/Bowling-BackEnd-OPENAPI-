@@ -37,7 +37,6 @@ class ServiceWitMockedRepositoryNoSpring {
                     FramePostgre(0, null, null, null, 0, "")
                 )
             }
-
     }
 
     //test the in-bound door
