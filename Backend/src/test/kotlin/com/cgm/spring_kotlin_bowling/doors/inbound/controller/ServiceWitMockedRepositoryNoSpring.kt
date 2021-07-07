@@ -28,14 +28,7 @@ class ServiceWitMockedRepositoryNoSpring {
 
         `when`(repository.findAll())
             .thenAnswer {
-                arrayListOf(
-                    FramePostgre(0, null, null, null, 0, ""),
-                    FramePostgre(0, null, null, null, 0, ""),
-                    FramePostgre(0, null, null, null, 0, ""),
-                    FramePostgre(0, null, null, null, 0, ""),
-                    FramePostgre(0, null, null, null, 0, ""),
-                    FramePostgre(0, null, null, null, 0, "")
-                )
+                List<FramePostgre>(10) {FramePostgre(0, null, null, null, 0, "")}
             }
     }
 

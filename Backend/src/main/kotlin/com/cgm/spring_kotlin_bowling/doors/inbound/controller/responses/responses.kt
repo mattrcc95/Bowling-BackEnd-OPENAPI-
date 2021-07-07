@@ -39,10 +39,12 @@ private fun buildResponse(
     httpHeaders: HttpHeaders = HttpHeaders()
 ): ResponseEntity<Any> {
     val errorTemplate = JsonApiError()
-    errorTemplate.data = ErrorData()
-    errorTemplate.data.attributes = ErrorDataAttributes()
-    errorTemplate.data.attributes.code = code
-    errorTemplate.data.attributes.description = description
+    errorTemplate.apply {
+        data = ErrorData()
+        data.attributes = ErrorDataAttributes()
+        data.attributes.code = code
+        data.attributes.description = description
+    }
     return ResponseEntity.status(status).headers(httpHeaders).body(errorTemplate)
 }
 
@@ -77,7 +79,6 @@ fun apiNotImplementedResponse(): ResponseEntity<Any> {
     return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "500", "500 API NOT IMPLEMENTED", httpHeaders)
 }
 
-// NON E' UN CASO
 fun getJsonApiFrame(framePostgre: FramePostgre?, overrideId: String? = null): Frame {
     val frame = Frame()
     return framePostgre
@@ -86,20 +87,24 @@ fun getJsonApiFrame(framePostgre: FramePostgre?, overrideId: String? = null): Fr
             val dataFrame = frame.data
             dataFrame.id = overrideId ?: framePostgre.id.toString()
             dataFrame.attributes = FrameDataAttributes()
-            setAttributes(framePostgre, dataFrame.attributes)
-            frame
+            frame.apply {
+                data.attributes = getAttributes(framePostgre)
+            }
         }
         ?: frame
 }
 
-private fun setAttributes(
+private fun getAttributes(
     frame: FramePostgre,
-    attributes: FrameDataAttributes
-) {
-    attributes.shot1 = frame.shot1
-    attributes.shot2 = frame.shot2
-    attributes.shot3 = frame.shot3
-    attributes.score = frame.score
-    attributes.flag = frame.flag
+): FrameDataAttributes {
+    val attributes = FrameDataAttributes()
+    return frame.let {
+        attributes.shot1 = it.shot1
+        attributes.shot2 = it.shot2
+        attributes.shot3 = it.shot3
+        attributes.score = it.score
+        attributes.flag = it.flag
+        attributes
+    }
 }
 

@@ -15,13 +15,13 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.post
 
+const val baseLink = "http://localhost:8080/api/v1"
 @SpringBootTest
 @AutoConfigureMockMvc //generate configuration for mocking model view controller
 class ControllerServiceRepositoryDB_API_CALLS_Test @Autowired constructor(
     private val mockMvc: MockMvc,
     private val objectMapper: ObjectMapper
 ) {
-    val baseLink = "http://localhost:8080/api/v1"
 
     @BeforeEach
     fun clearDB() {

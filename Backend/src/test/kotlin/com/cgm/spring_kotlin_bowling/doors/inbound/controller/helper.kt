@@ -1,12 +1,14 @@
 package com.cgm.spring_kotlin_bowling.doors.inbound.controller
 
 import com.cgm.spring_kotlin_bowling.doors.inbound.controller.jsonApiModels.*
+import com.cgm.spring_kotlin_bowling.doors.outbound.server.server_reponses.getJsonApiFrame
 
 
 //val frame = getFrame(
 //    "1", 10, null,
 //    null, "X", 10
 //)
+
 
 fun setRoll(rollValue: Int) : Roll {
     val attributes = RollDataAttributes()
