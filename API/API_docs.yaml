@@ -24,19 +24,25 @@ paths:
         "204":
           description: frames correctly deleted
     post:
-      summary: Create (manually) a frame with id_created == id_last + 1
+      summary: Create (manually) a frame with id_created == id_last + 1 (NOT IMPLEMENTED, DROPS 500 ONLY)
       requestBody:
         content:
           application/vnd.api+json:
             schema:
-             $ref: "#/components/schemas/NoLinkNoIDFrame"
+             $ref: "#/components/schemas/Frame"
       responses:
         "201":
           description: frame correctly created
           content:
             application/vnd.api+json:
               schema:
-                $ref: "#/components/schemas/NoLinkFrame"
+                $ref: "#/components/schemas/Frame"
+        "500":
+          description: API NOT IMPLEMENTED
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /scoreboard/frames/{id}:
     get:
       parameters:
@@ -53,7 +59,7 @@ paths:
           content: 
             application/vnd.api+json:
               schema:
-                $ref: "#/components/schemas/LinkFrame"
+                $ref: "#/components/schemas/Frame"
         "404":
           description: frame requested does not exists
           content: 
@@ -61,7 +67,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     patch:
-      summary: Update the id-th == 'last' frame
+      summary: Update the id-th == 'last' frame (NOT IMPLEMENTED DROPS 500 ONLY)
       parameters:
         - name: id
           in: path
@@ -84,8 +90,14 @@ paths:
             application/vnd.api+json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "500":
+          description: API NOT IMPLEMENTED
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
-      summary: Delete the id-th == 'last' frame
+      summary: Delete the id-th == 'last' frame (NOT IMPLEMENTED DROPS 500 ONLY)
       parameters:
         - name: id
           in: path
@@ -104,6 +116,12 @@ paths:
                 $ref: "#/components/schemas/Error"
         "404":
           description: frame to delete does not exist
+          content: 
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: API NOT IMPLEMENTED
           content: 
             application/vnd.api+json:
               schema:
@@ -131,76 +149,7 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
-    NoLinkNoIDFrame:
-      description: no ID frame
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          type: object
-          properties:
-            type:
-              type: string
-            attributes:
-              type: object
-              properties:
-                shot1:
-                  type: integer
-                shot2:
-                  type: integer
-                shot3:
-                  type: integer
-                flag:
-                  type: string
-                localscore:
-                  type: integer
-      example:
-        data:
-          type: "Frame"
-          attributes:
-            shot1: 2
-            shot2: 5
-            shot3: null
-            flag: "2 - 5"
-            localscore: 7
-    NoLinkFrame:
-      description: scoreboard item
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          type: object
-          properties:
-            id: 
-              type: integer
-            type:
-              type: string
-            attributes:
-              type: object
-              properties:
-                shot1:
-                  type: integer
-                shot2:
-                  type: integer
-                shot3:
-                  type: integer
-                flag:
-                  type: string
-                localscore:
-                  type: integer
-      example:
-        data:
-          id: 1
-          type: "Frame"
-          attributes:
-            shot1: 2
-            shot2: 5
-            shot3: null
-            flag: "2 - 5"
-            localscore: 7
-    LinkFrame:
+    Frame:
       description: Frame with Link included
       type: object
       required:
@@ -215,7 +164,7 @@ components:
           type: object
           properties:
             id: 
-              type: integer
+              type: string
             type:
               type: string
             attributes:
@@ -257,7 +206,7 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/NoLinkFrame"
+            $ref: "#/components/schemas/Frame"
       example: 
           links:
             self: "http://localhost:8080/api/v1/scoreboard/frames"
@@ -313,6 +262,7 @@ components:
       properties:
         data:
           type: object
+          nullable: false
           properties:
             attributes:
               type: object
