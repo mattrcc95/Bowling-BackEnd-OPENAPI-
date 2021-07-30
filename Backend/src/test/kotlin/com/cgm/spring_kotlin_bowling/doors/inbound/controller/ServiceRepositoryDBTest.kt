@@ -16,8 +16,6 @@ class ServiceRepositoryDBTest(
     @Autowired private val playerService: PlayerService
 ) {
 
-    //           GIVEN    WHEN   THEN
-    // AAA:    Arrange    Act    Assert
     @BeforeEach
     fun clearDB() {
         playerService.deleteAll()
